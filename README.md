@@ -3,6 +3,7 @@
 ## Fork Changes 
 * Added __jab_int32 getImageSize(jab_bitmap* bitmap)__
 * Added __saveImageToMemory(jab_bitmap* bitmap, jab_char* buffer, size_t bufferSize)__
+* Removed TIFF format and related code
 
 <a href="https://jabcode.org">
     <img src="docs/img/jabcode_logo.png" alt="JAB logo" title="JAB" align="right" height="80" />
@@ -56,11 +57,11 @@ Step 1: Download and install mingw-w64 from http://mingw-w64.org/.
 
 Step 2: For 64-bit Windows, Step 3 can be skipped, because the necessary libraries are already prebuilt. 
 
-Step 3: For 32-bit Windows, download the source codes of libpng, libtiff and zlib from the following sites. 
+Step 3: For 32-bit Windows, download the source codes of libpng, ~~libtiff~~ and zlib from the following sites. 
 			http://www.libpng.org/
-			http://www.libtiff.org/
+			~~http://www.libtiff.org/~~
 			https://www.zlib.net/
-		Build the static libraries for libpng, libtiff and zlib in mingw-64 and put the built libraries in the folder "jabcode/lib/win64" to replace the 64-bit version. 
+		Build the static libraries for libpng, ~~libtiff~~ and zlib in mingw-64 and put the built libraries in the folder "jabcode/lib/win64" to replace the 64-bit version. 
    
 Step 4: Rename the file "Makefile.win" to "Makefile" in the folder "jabcode".
 

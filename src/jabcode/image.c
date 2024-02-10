@@ -16,7 +16,6 @@
 #include <string.h>
 #include "jabcode.h"
 #include "png.h"
-#include "tiffio.h"
 
 /**
  * @brief Initialises PNG image
@@ -176,67 +175,6 @@ jab_bitmap* convertRGB2CMYK(jab_bitmap* rgb)
 		}
 	}
     return cmyk;
-}
-
-/**
- * @brief Save code bitmap in CMYK as TIFF image
- * @param bitmap the code bitmap
- * @param isCMYK set TRUE if the code bitmap is already in CMYK
- * @param filename the image filename
- * @return JAB_SUCCESS | JAB_FAILURE
-*/
-jab_boolean saveImageCMYK(jab_bitmap* bitmap, jab_boolean isCMYK, jab_char* filename)
-{
-	jab_bitmap* cmyk = 0;
-
-	if(isCMYK)
-	{
-		cmyk = bitmap;
-	}
-	else
-	{
-		cmyk = convertRGB2CMYK(bitmap);
-		if(cmyk == NULL)
-		{
-			JAB_REPORT_ERROR(("Converting RGB to CMYK failed"))
-			return JAB_FAILURE;
-		}
-	}
-
-	//save CMYK image as TIFF
-	TIFF *out= TIFFOpen(filename, "w");
-	if(out == NULL)
-	{
-		JAB_REPORT_ERROR(("Cannot open %s for writing", filename))
-		if(!isCMYK)	free(cmyk);
-		return JAB_FAILURE;
-	}
-
-	TIFFSetField(out, TIFFTAG_IMAGEWIDTH, cmyk->width);
-	TIFFSetField(out, TIFFTAG_IMAGELENGTH, cmyk->height);
-	TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, cmyk->channel_count);
-	TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, cmyk->bits_per_channel);
-	TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
-	TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-	TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_SEPARATED);
-	jab_int32 rows_per_strip = TIFFDefaultStripSize(out, -1);
-	TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, rows_per_strip);
-
-	//write image to the file one scanline at a time
-	jab_int32 row_size = cmyk->width * cmyk->channel_count;
-	jab_boolean status = JAB_SUCCESS;
-	for(jab_int32 row=0; row<cmyk->height; row++)
-	{
-		if(TIFFWriteScanline(out, &cmyk->pixel[row * row_size], row, 0) < 0)
-		{
-			status = JAB_FAILURE;
-			break;
-		}
-	}
-
-	TIFFClose(out);
-	if(!isCMYK)	free(cmyk);
-	return status;
 }
 
 /**
