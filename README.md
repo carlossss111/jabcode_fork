@@ -1,3 +1,9 @@
+
+
+## Fork Changes 
+* Added __jab_int32 getImageSize(jab_bitmap* bitmap)__
+* Added __saveImageToMemory(jab_bitmap* bitmap, jab_char* buffer, size_t bufferSize)__
+
 <a href="https://jabcode.org">
     <img src="docs/img/jabcode_logo.png" alt="JAB logo" title="JAB" align="right" height="80" />
 </a>

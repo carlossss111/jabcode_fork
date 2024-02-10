@@ -1,0 +1,8 @@
+# Build Files
+*.o
+*.a
+*.so
+*.out
+
+# Test Files
+main.c

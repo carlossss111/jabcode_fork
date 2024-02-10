@@ -19,6 +19,28 @@
 #include "tiffio.h"
 
 /**
+ * @brief Initialises PNG image
+ * @param bitmap the code bitmap
+ * @param image the image to initialise
+ */
+void initImageStructure(jab_bitmap* bitmap, png_image* image) {
+    image->version = PNG_IMAGE_VERSION;
+
+    if(bitmap->channel_count == 4)
+    {
+		image->format = PNG_FORMAT_RGBA;
+		image->flags  = PNG_FORMAT_FLAG_ALPHA | PNG_FORMAT_FLAG_COLOR;
+    }
+    else
+    {
+		image->format = PNG_FORMAT_GRAY;
+    }
+
+    image->width  = bitmap->width;
+    image->height = bitmap->height;
+}
+
+/**
  * @brief Save code bitmap in RGB as png image
  * @param bitmap the code bitmap
  * @param filename the image filename
@@ -26,29 +48,16 @@
 */
 jab_boolean saveImage(jab_bitmap* bitmap, jab_char* filename)
 {
-	png_image image;
+    png_image image;
     memset(&image, 0, sizeof(image));
-    image.version = PNG_IMAGE_VERSION;
-
-    if(bitmap->channel_count == 4)
-    {
-		image.format = PNG_FORMAT_RGBA;
-		image.flags  = PNG_FORMAT_FLAG_ALPHA | PNG_FORMAT_FLAG_COLOR;
-    }
-    else
-    {
-		image.format = PNG_FORMAT_GRAY;
-    }
-
-    image.width  = bitmap->width;
-    image.height = bitmap->height;
+    initImageStructure(bitmap, &image);
 
     if (png_image_write_to_file(&image,
-								filename,
-								0/*convert_to_8bit*/,
-								bitmap->pixel,
-								0/*row_stride*/,
-								NULL/*colormap*/) == 0)
+        filename,
+        0/*convert_to_8bit*/,
+        bitmap->pixel,
+        0/*row_stride*/,
+        NULL/*colormap*/) == 0)
 	{
 		reportError(image.message);
 		reportError("Saving png image failed");
@@ -56,6 +65,57 @@ jab_boolean saveImage(jab_bitmap* bitmap, jab_char* filename)
 	}
 	return JAB_SUCCESS;
 }
+
+/**
+ * @brief Save code bitmap in RGB to memory buffer
+ * @param bitmap the code bitmap
+ * @param buffer the memory to write to
+ * @param bufferSize the size of the memory to write to
+ * @return int JAB_SUCCESS | JAB_FAILURE
+ */
+int saveImageToMemory(jab_bitmap* bitmap, jab_char* buffer, size_t bufferSize)
+{
+    png_image image;
+    memset(&image, 0, sizeof(image));
+    initImageStructure(bitmap, &image);
+
+    // write to buffer
+    if(png_image_write_to_memory(
+        &image,
+        buffer,
+        &bufferSize,
+        0/*convert_to_8bit*/,
+        bitmap->pixel,
+        0/*row_stride*/,
+        NULL/*colormap*/) == 0)
+	{
+		reportError(image.message);
+		reportError("Storing png image to memory failed");
+		return JAB_FAILURE;
+    }
+        
+    return JAB_SUCCESS;
+}
+
+/**
+ * @brief Get the memory size of the bitmap if it were a PNG image
+ * @param bitmap the code bitmap
+ * @return jab_int32 expected size of
+ */
+jab_int32 getImageSize(jab_bitmap* bitmap)
+{
+    png_image image;
+    memset(&image, 0, sizeof(image));
+    initImageStructure(bitmap, &image);
+	
+	// get buffer size
+	png_alloc_size_t bufferSize;
+	if(png_image_write_get_memory_size(image, bufferSize, 0, bitmap->pixel, 0, NULL) == 0){
+		return 0;
+	}
+	return bufferSize;
+}
+
 
 /**
  * @brief Convert a bitmap from RGB to CMYK color space
