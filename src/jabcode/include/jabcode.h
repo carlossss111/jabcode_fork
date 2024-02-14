@@ -174,5 +174,6 @@ extern void reportError(jab_char* message);
 
 extern int saveImageToMemory(jab_bitmap* bitmap, jab_char* buffer, size_t bufferSize);
 extern jab_int32 getImageSize(jab_bitmap* bitmap);
+extern jab_bitmap* readImageFromMemory(jab_byte* pngMemory, jab_int32 pngMemorySize);
 
 #endif
