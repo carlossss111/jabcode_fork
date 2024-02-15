@@ -5,7 +5,8 @@
 * Added __saveImageToMemory(jab_bitmap* bitmap, jab_char* buffer, size_t bufferSize)__
 * Removed TIFF format and related code
 * Added __readImageFromMemory(jab_byte* pngMemory, jab_int32 pngMemorySize)__
-* Added crazy hotfix to encoder.c when running from a JVM with JNI
+* Added actual fix to JNI compilation (makefile)
+* Added migrate shell script to make my own work quicker
 
 <a href="https://jabcode.org">
     <img src="docs/img/jabcode_logo.png" alt="JAB logo" title="JAB" align="right" height="80" />
