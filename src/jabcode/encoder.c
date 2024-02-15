@@ -663,6 +663,9 @@ jab_int32 getSymbolCapacity(jab_encode* enc, jab_int32 index)
 			nb_modules_metadata += MASTER_METADATA_PART1_MODULE_NUMBER; //add modules for PartI
 		}
 	}
+	if(enc->symbol_versions[index].x == 32){
+		printf("<Including this print statement stops the JNI from breaking. Not joking.> (%s:%d)", __FILE__, __LINE__);
+	}
 	jab_int32 capacity = (side_size_x*side_size_y - nb_modules_fp - nb_modules_ap - nb_modules_palette - nb_modules_metadata) * nb_of_bpm;
 	return capacity;
 }
@@ -1776,15 +1779,22 @@ jab_boolean setMasterSymbolVersion(jab_encode *enc, jab_data* encoded_data)
 		enc->symbol_versions[0].x = i;
 		enc->symbol_versions[0].y = i;
 		capacity = getSymbolCapacity(enc, 0);
+
 		net_capacity = (capacity/enc->symbols[0].wcwr[1])*enc->symbols[0].wcwr[1] - (capacity/enc->symbols[0].wcwr[1])*enc->symbols[0].wcwr[0];
 		if(net_capacity >= payload_length)
 		{
+			#ifdef JNI_DEBUG
+			printf("Master Symbol Found at i: %d, cap: %d, net_cap: %d, sym: %d\n", i, capacity, net_capacity, enc->symbol_versions[0].x);
+			#endif
 			found_flag = JAB_SUCCESS;
 			break;
 		}
 	}
 	if(!found_flag)
 	{
+		#ifdef JNI_DEBUG
+		printf("Master Symbol NOT Found cap: %d, net_cap: %d, sym: %d\n", capacity, net_capacity, enc->symbol_versions[0].x);
+		#endif
 		jab_int32 level = -1;
 		for (jab_int32 j=(jab_int32)enc->symbol_ecc_levels[0]-1; j>0; j--)
 		{
