@@ -1,8 +1,10 @@
+# Modified 28 Feb, 2024. Daniel R
+
 PREFIX 	=
 CC 	= $(PREFIX)gcc
 AR 	= $(PREFIX)ar
 RANLIB	= $(PREFIX)ranlib
-CFLAGS	= -g -O2 -std=c11 -fPIC -D_REENTRANT -D_POSIX_C_SOURCE
+CFLAGS	= -O2 -std=c11 -fPIC -D_REENTRANT -D_POSIX_C_SOURCE
 
 TARGET = build/libjabcode.a
 

@@ -1,3 +1,7 @@
+/*
+ * Modified 28 Feb, 2024. Daniel R
+*/
+
 /**
  * libjabcode - JABCode Encoding/Decoding Library
  *
@@ -662,9 +666,6 @@ jab_int32 getSymbolCapacity(jab_encode* enc, jab_int32 index)
 			}
 			nb_modules_metadata += MASTER_METADATA_PART1_MODULE_NUMBER; //add modules for PartI
 		}
-	}
-	if(enc->symbol_versions[index].x == 32){
-		printf("<Including this print statement stops the JNI from breaking. Not joking.> (%s:%d)", __FILE__, __LINE__);
 	}
 	jab_int32 capacity = (side_size_x*side_size_y - nb_modules_fp - nb_modules_ap - nb_modules_palette - nb_modules_metadata) * nb_of_bpm;
 	return capacity;

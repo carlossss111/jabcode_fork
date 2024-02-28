@@ -1,3 +1,7 @@
+/*
+ * Modified 28 Feb, 2024. Daniel R
+*/
+
 /**
  * libjabcode - JABCode Encoding/Decoding Library
  *
